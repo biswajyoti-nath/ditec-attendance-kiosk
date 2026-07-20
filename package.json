@@ -1,0 +1,30 @@
+{
+  "name": "attendance-system",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "CI=1 next dev -H 0.0.0.0",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.17.4",
+    "date-fns": "^4.4.0",
+    "date-fns-tz": "^3.2.0",
+    "face-api.js": "^0.22.2",
+    "jsqr": "^1.4.0",
+    "lucide-react": "^1.24.0",
+    "next": "^14.2.35",
+    "qrcode.react": "^4.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "uuid": "^14.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.35",
+    "tailwindcss": "^4"
+  }
+}

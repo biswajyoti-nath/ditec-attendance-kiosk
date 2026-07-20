@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  attendance-system:
+    build: .
+    container_name: ditec-attendance
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - DB_PATH=/app/data/attendance.db
+      - APP_TIMEZONE=Asia/Kolkata
+      - NODE_ENV=production
+    restart: unless-stopped
