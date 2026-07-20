@@ -23,7 +23,7 @@ The easiest way to deploy this system is via Docker.
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/attendance-system.git
+git clone https://github.com/biswajyoti-nath/attendance-system.git
 cd attendance-system
 
 # 2. Build and start the container in detached mode
