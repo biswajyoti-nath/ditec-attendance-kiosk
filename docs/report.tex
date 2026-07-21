@@ -82,7 +82,7 @@ Figure~\ref{fig:arch} illustrates the separation of concerns between the user in
     \node[box] (cam) {Webcam Feed\\(60 fps)};
     \node[box, right=of cam] (react) {React UI\\(Main Thread)};
     \node[worker, above=of react] (ai) {Web Worker\\(face-api.js)};
-    \node[box, right=of react] (api) {Next.js API\\(Mutex Lock)};
+    \node[box, right=3.5cm of react] (api) {Next.js API\\(Mutex Lock)};
     \node[db, right=of api] (sqlite) {SQLite\\Database};
     
     % Edges
@@ -95,8 +95,8 @@ Figure~\ref{fig:arch} illustrates the separation of concerns between the user in
     
     % Background box for browser
     \begin{scope}[on background layer]
-        \node[draw, dashed, fill=gray!10, fit=(cam) (react) (ai), inner sep=20pt, label={[font=\bfseries]below:Client Browser (Edge)}] {};
-        \node[draw, dashed, fill=red!5, fit=(api) (sqlite), inner sep=20pt, label={[font=\bfseries]below:Node.js Server Container}] {};
+        \node[draw, dashed, fill=gray!10, fit=(cam) (react) (ai), inner sep=15pt, label={[font=\bfseries]below:Client Browser (Edge)}] {};
+        \node[draw, dashed, fill=red!5, fit=(api) (sqlite), inner sep=15pt, label={[font=\bfseries]below:Node.js Server Container}] {};
     \end{scope}
     
     \end{tikzpicture}
