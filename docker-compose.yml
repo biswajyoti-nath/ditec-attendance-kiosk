@@ -12,4 +12,6 @@ services:
       - DB_PATH=/app/data/attendance.db
       - APP_TIMEZONE=Asia/Kolkata
       - NODE_ENV=production
+      - ADMIN_USER=admin
+      - ADMIN_PASS=ditec2026
     restart: unless-stopped
