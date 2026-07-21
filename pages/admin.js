@@ -122,8 +122,8 @@ export default function Admin() {
 
   const handleEmailShare = () => {
     const subject = encodeURIComponent("Your Attendance System QR Code");
-    const body = encodeURIComponent(`Hello ${registeredUser.name},\n\nHere is your secure access ID for the Attendance System:\n\nID: ${registeredUser.id}\n\nPlease find your QR code attached to this email. (Admin: Don't forget to attach the downloaded PNG!)`);
-    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    const body = encodeURIComponent(`Hello ${registeredUser.name},\n\nHere is your secure access ID for the Attendance System:\n\nID: ${registeredUser.id}\n\nPlease find your QR code attached to this email.`);
+    window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
   };
 
   return (
