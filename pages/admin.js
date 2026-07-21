@@ -140,8 +140,11 @@ export default function Admin() {
           
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-slate-600 mb-2">Full Name</label>
+              <label htmlFor="fullName" className="block text-sm font-medium text-slate-600 mb-2">Full Name</label>
               <input 
+                id="fullName"
+                name="fullName"
+                autoComplete="name"
                 type="text" 
                 value={name}
                 onChange={e => setName(e.target.value)}
@@ -151,8 +154,11 @@ export default function Admin() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-600 mb-2">Email Address (Optional)</label>
+              <label htmlFor="emailAddress" className="block text-sm font-medium text-slate-600 mb-2">Email Address (Optional)</label>
               <input 
+                id="emailAddress"
+                name="email"
+                autoComplete="email"
                 type="email" 
                 value={email}
                 onChange={e => setEmail(e.target.value)}
@@ -177,7 +183,7 @@ export default function Admin() {
                   title="Upload a photo"
                 />
                 <div className="w-full py-6 border-2 border-dashed border-slate-300 bg-white text-slate-600 font-semibold rounded-xl hover:bg-slate-50 hover:border-slate-400 transition-colors flex flex-col items-center justify-center">
-                  <svg className="w-10 h-10 mb-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-10 h-10 mb-3 text-slate-400" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                   Click to Browse or Drag Photo Here
@@ -251,7 +257,7 @@ export default function Admin() {
                     onClick={downloadQR}
                     className="flex-1 py-3 bg-white text-slate-900 font-bold rounded-xl transition-colors shadow-lg hover:bg-slate-100 flex items-center justify-center"
                   >
-                    <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 mr-2" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
                     Save QR
@@ -260,7 +266,7 @@ export default function Admin() {
                     onClick={handleEmailShare}
                     className="flex-1 py-3 bg-emerald-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-emerald-500/25 hover:bg-emerald-400 flex items-center justify-center"
                   >
-                    <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 mr-2" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                     Email
@@ -283,7 +289,7 @@ export default function Admin() {
           ) : (
             <div className="text-slate-500 max-w-xs mx-auto relative z-10">
               <div className="w-28 h-28 border-4 border-dashed border-slate-700 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-slate-800/50">
-                <svg className="w-10 h-10 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-10 h-10 text-slate-600" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
               </div>

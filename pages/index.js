@@ -34,6 +34,7 @@ export default function Home() {
   const isWorkerBusyRef = useRef(false);
   const scanNoticeTimeoutRef = useRef(null);
   const blockedQrIdRef = useRef(null);
+  const isTestModeRef = useRef(isTestMode);
 
   // Keep recognition work small enough for responsive kiosk scanning. This is
   // independent of the original camera stream and of uploaded face baselines.
@@ -43,6 +44,7 @@ export default function Home() {
   useEffect(() => { stepRef.current = step; }, [step]);
   useEffect(() => { userRef.current = user; }, [user]);
   useEffect(() => { attendanceTypeRef.current = attendanceType; }, [attendanceType]);
+  useEffect(() => { isTestModeRef.current = isTestMode; }, [isTestMode]);
 
   // 1. Initialize Worker & Load Models
   useEffect(() => {
@@ -270,7 +272,7 @@ export default function Home() {
       const res = await fetch('/api/attendance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, type: attendanceTypeRef.current, isTest: isTestMode }),
+        body: JSON.stringify({ userId, type: attendanceTypeRef.current, isTest: isTestModeRef.current }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -360,7 +362,7 @@ export default function Home() {
               type="checkbox" 
               checked={isTestMode} 
               onChange={(e) => setIsTestMode(e.target.checked)}
-              className="form-checkbox h-4 w-4 text-sky-500 rounded bg-slate-700 border-slate-600 focus:ring-sky-500 transition-all"
+              className="form-checkbox h-4 w-4 text-sky-500 rounded bg-slate-700 border-slate-600 focus-visible:ring-sky-500 outline-none transition-all"
             />
           </label>
         </div>
@@ -387,8 +389,8 @@ export default function Home() {
             </div>
           )}
           {step === 'SCANNING_FACE' && (
-            <div className="absolute inset-0 pointer-events-none border-2 border-sky-500/50 m-4 rounded-xl flex items-end justify-center pb-4">
-               <span className="bg-slate-900/80 text-sky-400 px-4 py-1 rounded-full text-sm font-medium">{faceStatus || 'Analyzing face...'}</span>
+            <div className="absolute inset-0 pointer-events-none border-2 border-sky-500/50 m-4 rounded-xl flex items-end justify-center pb-4" aria-live="polite">
+               <span className="bg-slate-900/80 text-sky-400 px-4 py-1 rounded-full text-sm font-medium">{faceStatus || 'Analyzing face…'}</span>
             </div>
           )}
         </div>
@@ -405,21 +407,21 @@ export default function Home() {
           {step === 'LOADING_MODELS' && (
             <div className="flex flex-col items-center">
               <div className="w-10 h-10 border-4 border-slate-500 border-t-sky-500 rounded-full animate-spin"></div>
-              <p className="mt-4 text-slate-400">Initializing AI Background Worker...</p>
+              <p className="mt-4 text-slate-400">Initializing AI Background Worker…</p>
             </div>
           )}
 
           {step === 'PROCESSING' && (
             <div className="flex flex-col items-center">
               <div className="w-10 h-10 border-4 border-slate-500 border-t-sky-500 rounded-full animate-spin"></div>
-              <p className="mt-4 text-slate-400">{faceStatus || 'Processing...'}</p>
+              <p className="mt-4 text-slate-400">{faceStatus || 'Processing…'}</p>
             </div>
           )}
 
           {step === 'SUCCESS' && (
             <div className="text-center animation-fade-in w-full bg-emerald-900/30 p-6 rounded-2xl border border-emerald-500/30">
               <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+                <svg className="w-8 h-8" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
               </div>
               <h2 className="text-2xl font-bold text-white mb-2">Success</h2>
               <p className="text-emerald-300 font-medium">{successMsg}</p>
@@ -429,7 +431,7 @@ export default function Home() {
           {step === 'ERROR' && (
             <div className="text-center animation-fade-in w-full bg-rose-900/30 p-6 rounded-2xl border border-rose-500/30">
               <div className="w-16 h-16 bg-rose-500/20 text-rose-400 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-rose-500">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <svg className="w-8 h-8" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"></path></svg>
               </div>
               <h2 className="text-2xl font-bold text-white mb-2">Access Denied</h2>
               <p className="text-rose-300 font-medium">{errorMsg}</p>
