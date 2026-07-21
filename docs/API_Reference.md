@@ -58,3 +58,27 @@ Retrieves a chronologically ordered list of all attendance logs.
     }
   ]
   ```
+
+---
+
+## 3. Register New User
+
+Registers a new user with face descriptors in the database. Protected by Basic Auth.
+
+**Endpoint:** `POST /api/users`
+
+### Request Headers
+- `Authorization: Basic <base64 credentials>`
+
+### Request Body
+```json
+{
+  "name": "string (required)",
+  "descriptors": [ [number, number, ...] ]
+}
+```
+
+### Responses
+- **200 OK** (Successfully registered)
+- **401 Unauthorized** (Missing or invalid Basic Auth header)
+

@@ -27,3 +27,7 @@ A standard TOCTOU (Time of Check to Time of Use) vulnerability exists if a user 
 By default, Docker containers are stateless. 
 - **SQLite Volume:** We utilize a host-mounted volume `./data:/app/data` to permanently map the embedded SQLite database (`attendance.db`) out of the container lifecycle.
 - **Environment Agnosticism:** The application resolves the database path dynamically via `process.env.DB_PATH`.
+
+### 2.4 Security & Admin Access
+The system contains an administrative dashboard (`/admin`) for user registration.
+- **Edge Middleware:** Access to the admin panel and its associated APIs (`/api/users`) is protected by HTTP Basic Authentication running on Next.js Edge Middleware. This intercepts unauthorized requests before they ever hit the React rendering engine or Node.js backend. Credentials are dynamically injected via environment variables (`ADMIN_USER`, `ADMIN_PASS`) at runtime via Docker Compose.

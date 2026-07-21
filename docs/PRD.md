@@ -27,7 +27,13 @@ The AI Attendance Kiosk is a modern, standalone system designed to automate empl
 - **Requirement:** Allow administrators to bypass time constraints for presentation or testing purposes.
 - **Acceptance Criteria:** A UI toggle must exist that, when enabled, bypasses the 11 AM and 5 PM strict checks while still logging the attendance accurately.
 
-### 3.4 Robustness & Offline Support
+### 3.4 Secure Admin Panel
+- **Requirement:** Provide a secure interface for administrators to register new users and generate QR codes.
+- **Acceptance Criteria:**
+  - An `/admin` dashboard must allow capturing user faces and generating downloadable/emailable QR codes.
+  - The dashboard and its underlying APIs must be protected by HTTP Basic Authentication.
+
+### 3.5 Robustness & Offline Support
 - **Requirement:** The system must run entirely locally without requiring internet-based AI APIs, and it must withstand concurrent request anomalies.
 - **Acceptance Criteria:**
   - Facial recognition must execute in the browser using Web Workers to avoid freezing the UI.

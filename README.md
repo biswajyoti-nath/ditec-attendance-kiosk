@@ -38,6 +38,15 @@ To view the generated SQLite records, simply navigate to:
 http://localhost:3000/api/attendance
 ```
 
+### Admin Panel (Registration)
+To register new users and generate QR codes, access the secure admin dashboard:
+```text
+http://localhost:3000/admin
+```
+**Credentials (Configured in docker-compose):**
+- **Username:** `admin`
+- **Password:** `ditec2026`
+
 ## Local Development (Without Docker)
 
 ```bash
