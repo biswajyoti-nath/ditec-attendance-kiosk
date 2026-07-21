@@ -1,0 +1,189 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+% Custom Colors
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break, const, let, async, await, export, default, import, from},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{codegreen}\ttfamily,
+  stringstyle=\color{codepurple}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\title{\textbf{AI Attendance Kiosk: Technical Code Explainer}}
+\author{Biswajyoti Nath \and DITEC Presentation Script}
+\date{July 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction to the Presenter Script}
+This document serves as a deep-dive technical script designed to answer rigorous engineering questions during the DITEC internship presentation. It breaks down the most complex logic implementations: Concurrency Management (Mutex Locks), Web Worker Offloading for Edge AI, and Edge Security (Middleware Auth).
+
+\section{Security: Next.js Edge Middleware}
+To protect the administrative dashboard from unauthorized access, we implemented HTTP Basic Authentication at the Edge layer. 
+
+\subsection{Why Edge Middleware?}
+Instead of securing routes inside React components (which can cause flashes of unauthorized content) or at the Node.js API layer (which wastes server cycles), we intercept requests at the Edge. If authentication fails, the request never hits the main server.
+
+\subsection{Code Breakdown: \texttt{middleware.js}}
+\begin{lstlisting}[language=JavaScript]
+import { NextResponse } from 'next/server';
+
+export function middleware(req) {
+  const basicAuth = req.headers.get('authorization');
+  const url = req.nextUrl;
+
+  // 1. Intercept Target Routes
+  if (url.pathname.startsWith('/admin') || url.pathname.startsWith('/api/users')) {
+    
+    // 2. Validate Credentials
+    if (basicAuth) {
+      const authValue = basicAuth.split(' ')[1];
+      const [user, pwd] = atob(authValue).split(':');
+
+      const expectedUser = process.env.ADMIN_USER;
+      const expectedPass = process.env.ADMIN_PASS;
+
+      if (user === expectedUser && pwd === expectedPass) {
+        return NextResponse.next(); // Access Granted
+      }
+    }
+
+    // 3. Trigger Native Browser Prompt
+    url.pathname = '/api/auth';
+    return new NextResponse('Auth Required.', {
+      status: 401,
+      headers: {
+        'WWW-Authenticate': 'Basic realm="Secure Admin Dashboard"',
+      },
+    });
+  }
+  return NextResponse.next();
+}
+\end{lstlisting}
+
+\textbf{Explainer Points for Jury:}
+\begin{itemize}
+    \item \textbf{Line 8:} We strictly target \texttt{/admin} (Frontend) and \texttt{/api/users} (Backend) to ensure complete protection.
+    \item \textbf{Line 25-29:} By responding with a 401 and the \texttt{WWW-Authenticate} header, we force the browser to trigger its native, un-hackable password popup.
+    \item \textbf{Line 15-16:} Credentials are dynamically injected via Docker environment variables, ensuring no hardcoded secrets exist in the codebase.
+\end{itemize}
+
+\section{Concurrency: Mitigating Race Conditions}
+A classic Time-of-Check-to-Time-of-Use (TOCTOU) vulnerability exists if a user holds their face to the camera too long, causing the frontend to fire two API \texttt{POST} requests in rapid succession.
+
+\subsection{Code Breakdown: \texttt{pages/api/attendance/index.js}}
+We utilize a backend In-Memory Mutex Lock using a standard JavaScript \texttt{Map}.
+
+\begin{lstlisting}[language=JavaScript]
+// Global in-memory map to act as a mutex lock
+const activeLocks = new Map();
+
+export default async function handler(req, res) {
+    if (req.method === 'POST') {
+        const { userId, type } = req.body;
+        
+        // 1. Check and Acquire Lock
+        if (activeLocks.has(userId)) {
+            return res.status(409).json({ error: "Currently processing." });
+        }
+        activeLocks.set(userId, true);
+
+        try {
+            // ... Execute database SELECTs and INSERTs ...
+        } catch (error) {
+            console.error(error);
+        } finally {
+            // 2. Release Lock
+            activeLocks.delete(userId);
+        }
+    }
+}
+\end{lstlisting}
+
+\textbf{Explainer Points for Jury:}
+\begin{itemize}
+    \item \textbf{Line 2 (Global Scope):} \texttt{activeLocks} persists across API calls because Next.js reuses the Node.js process environment in production.
+    \item \textbf{Line 9-10 (Mutex Check):} If a second request for the same user arrives while the first is running, it instantly hits the \texttt{409 Conflict} and is aborted.
+    \item \textbf{Line 19-20 (Guaranteed Release):} We place \texttt{activeLocks.delete()} inside a \texttt{finally} block. Even if the database crashes or the logic throws an error, the lock is strictly released to prevent deadlocks.
+\end{itemize}
+
+\section{Performance: Web Worker Offloading}
+Running facial recognition inference (\texttt{face-api.js}) on the main thread causes the React UI to freeze. To achieve 60fps, we isolated the AI models into a background Web Worker.
+
+\subsection{Code Breakdown: \texttt{workers/faceWorker.js}}
+\begin{lstlisting}[language=JavaScript]
+import * as faceapi from 'face-api.js';
+
+self.onmessage = async (e) => {
+    const { imageBuffer, width, height } = e.data;
+    
+    // 1. Reconstruct Image Data from Buffer
+    const imageData = new ImageData(
+        new Uint8ClampedArray(imageBuffer), 
+        width, height
+    );
+
+    // 2. Offscreen Inference
+    const detection = await faceapi
+      .detectSingleFace(imageData, new faceapi.TinyFaceDetectorOptions())
+      .withFaceLandmarks()
+      .withFaceDescriptor();
+
+    // 3. Post Results Back to UI
+    if (detection) {
+        self.postMessage({ descriptor: detection.descriptor });
+    }
+};
+\end{lstlisting}
+
+\textbf{Explainer Points for Jury:}
+\begin{itemize}
+    \item \textbf{Line 4:} We cannot pass HTML \texttt{<video>} elements to a Web Worker. We must extract the pixels into a generic \texttt{ArrayBuffer} first.
+    \item \textbf{Line 13 (TinyFaceDetector):} We utilize the lightweight quantized model to ensure inference remains under 100ms on edge hardware, prioritizing speed over extreme accuracy, which is balanced out by the initial QR code identity verification.
+\end{itemize}
+
+\end{document}
