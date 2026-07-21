@@ -163,7 +163,7 @@ export default function Admin() {
 
             <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200">
               <p className="font-semibold text-slate-800 mb-1">Face Data Upload</p>
-              <p className="text-sm text-slate-500 mb-6">Upload 1-3 clear photos of the user's face to serve as their verification baseline.</p>
+              <p className="text-sm text-slate-500 mb-6">Upload 1-3 clear photos of the user&apos;s face to serve as their verification baseline.</p>
               
               {/* Manual Upload */}
               <div className="relative mb-6">
