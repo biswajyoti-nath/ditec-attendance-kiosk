@@ -125,7 +125,7 @@ To secure the \texttt{/admin} dashboard and the underlying \texttt{/api/users} b
 For government-scale rollout, evaluating the system's economic and technical footprint is critical. The architecture was benchmarked against key industrial metrics to ensure viability across DITEC branch offices.
 
 \section{Economic Analysis (CAPEX \& OPEX)}
-Proprietary biometric attendance machines typically cost upwards of \$400 per unit and often require proprietary cloud subscriptions. As detailed in Table~\ref{tab:cost}, deploying the AI Attendance Kiosk as a Docker container on commodity hardware yields massive capital expenditure (CAPEX) savings and eliminates ongoing operational expenditure (OPEX).
+Proprietary biometric attendance machines typically cost upwards of INR 33,000 per unit and often require proprietary cloud subscriptions. As detailed in Table~\ref{tab:cost}, deploying the AI Attendance Kiosk as a Docker container on commodity hardware yields massive capital expenditure (CAPEX) savings and eliminates ongoing operational expenditure (OPEX).
 
 \begin{table}[H]
     \centering
@@ -135,8 +135,8 @@ Proprietary biometric attendance machines typically cost upwards of \$400 per un
         \toprule
         \textbf{Metric} & \textbf{Proprietary Terminal (e.g., ZKTeco)} & \textbf{Proposed AI Kiosk (Raspberry Pi)} \\
         \midrule
-        Initial Hardware Cost (CAPEX) & \$300 -- \$500 per unit & \$55 (\$40 SBC + \$15 Webcam) \\
-        Cloud API Costs (OPEX)        & \$20 -- \$50 / month & \$0.00 (Edge Inference) \\
+        Initial Hardware Cost (CAPEX) & INR 25,000 -- INR 40,000 per unit & INR 4,500 (INR 3,300 SBC + INR 1,200 Webcam) \\
+        Cloud API Costs (OPEX)        & INR 1,600 -- INR 4,000 / month & INR 0.00 (Edge Inference) \\
         Software Licensing            & Proprietary License & Open Source (MIT License) \\
         Data Sovereignty              & Vendor Cloud Dependent & 100\% Local (SQLite Database) \\
         \bottomrule
