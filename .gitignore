@@ -41,3 +41,12 @@ yarn-error.log*
 next-env.d.ts
 attendance.db*
 data/
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
